@@ -16,4 +16,7 @@ module.exports = app => {
   // router.post('/user', isLoginUser, hasAdminPermission, controller.user.create);
   router.get('/api/list/getList', controller.api.list.list.getList);
   router.post('/api/list/addList', controller.api.list.list.addList);
+
+  // 登录
+  router.post('/api/login/login', controller.api.login.login.login);
 };
