@@ -19,4 +19,6 @@ module.exports = app => {
 
   // 测试 给两个 前端服务提供接口
   router.post('/api/testPost/test', controller.api.testPost.test.test)
+  // 登录
+  router.post('/api/login/login', controller.api.login.login.login);
 };

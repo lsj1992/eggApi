@@ -9,7 +9,11 @@ module.exports = appInfo => {
   // add your config here
   config.middleware = [];
 
-  // mysql链接配置
+  /**
+   * 
+   *  mysql链接配置
+   *
+   */
   config.mysql = {
     client: {
       host: 'localhost',
@@ -23,6 +27,17 @@ module.exports = appInfo => {
     // load into agent, default is close
     agent: false,
   };
+  /**
+   *  链接redis
+   */
+  config.redis = {
+    client: {
+      port: 6379,          // Redis port
+      host: '127.0.0.1',   // Redis host
+      password: '123456',
+      db: 0,
+    },
+  }
 
   /**
    *  跨域配置 使用 egg-cors 插件  需要做以下几项工作
@@ -64,6 +79,3 @@ module.exports = appInfo => {
   return config;
 };
 
-function originName(params) {
-
-}
