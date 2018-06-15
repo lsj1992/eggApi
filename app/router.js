@@ -16,4 +16,7 @@ module.exports = app => {
   // router.post('/user', isLoginUser, hasAdminPermission, controller.user.create);
   router.get('/api/list/getList', controller.api.list.list.getList);
   router.post('/api/list/addList', controller.api.list.list.addList);
+
+  // 测试 给两个 前端服务提供接口
+  router.post('/api/testPost/test', controller.api.testPost.test.test)
 };
