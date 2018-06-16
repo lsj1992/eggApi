@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+</head>
+<body>
+  <button id="getOne">获取用户数据</button>
+  <button id="getTwo">获取跨域接口</button>
+  <script>
+    var csrftoken = $.cookie('csrfToken');
+
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader('x-csrf-token', csrftoken);
+        }
+      },
+    });
+    $('#getOne').on('click', function () {
+      $.ajax({
+        url: 'http://localhost:7001/api/testPost/test',
+        type: 'POST',
+        data: {
+          name: 'lsj',
+          sex: '男',
+          age: 0,
+          pwd: '123456'
+        },
+        xhrFields: {withCredentials: true},  // 前端设置是否带cookie
+        crossDomain: false,  // true会让请求头中包含跨域的额外信息，但不会含cookie
+        success(res) {
+          console.log(res)
+        },
+        error (err) {
+          console.log(err)
+        }
+      })
+    })
+  </script>
+</body>
+</html>
