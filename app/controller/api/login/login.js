@@ -17,7 +17,7 @@ class LoginController extends Controller {
     // ctx.body = results
     if (results[0].pwd == params.pwd) {
       console.log('jiiihihi')
-      await app.redis.set(`${results[0].id}_token`, `${results[0].id} + "_token"`);
+      await app.redis.set(`${results[0].id}_token`, `${results[0].id}_token`);
     }
     ctx.body = await app.redis.get(`${results[0].id}_token`);
     // this.ctx.body = results
