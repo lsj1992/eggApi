@@ -7,6 +7,8 @@
     "ecmaFeatures": {
       "jsx": true
     }
-   
+  },
+  "rules": {
+    "strict": 0
   }
 }

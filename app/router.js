@@ -18,7 +18,8 @@ module.exports = app => {
   router.post('/api/list/addList', controller.api.list.list.addList);
 
   // 测试 给两个 前端服务提供接口
-  router.post('/api/testPost/test', controller.api.testPost.test.test)
+  router.post('/api/testPost/testPost', controller.api.testPost.test.testPost);
+  router.del('/api/testPost/testDel', controller.api.testPost.test.testDel);
   // 登录
   router.post('/api/login/login', controller.api.login.login.login);
 };

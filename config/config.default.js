@@ -8,13 +8,29 @@ module.exports = appInfo => {
 
   // add your config here
   config.middleware = [];
+  // config.middleware = [ 'checklogin' ];
+  config.checklogin = {
+    ignore(ctx) {
+      const ignoreUrl = [
+        '/login/login',
+        // '/login/loginAction',
+        // '/login/logout',
+        // '/user/add',
+        // '/user/addAction',
+      ];
+      const URL = ctx.request.url;
+      return ignoreUrl.some(item => {
+        return URL === item;
+      });
+    },
+  };
 
   /**
-   * 
+   *
    *  mysql链接配置
    *
    */
-  config.mysql = {
+  exports.mysql = {
     client: {
       host: 'localhost',
       port: '3306',
@@ -30,14 +46,14 @@ module.exports = appInfo => {
   /**
    *  链接redis
    */
-  config.redis = {
+  exports.redis = {
     client: {
-      port: 6379,          // Redis port
-      host: '127.0.0.1',   // Redis host
+      port: 6379, // Redis port
+      host: '127.0.0.1', // Redis host
       password: '123456',
       db: 0,
     },
-  }
+  };
 
   /**
    *  跨域配置 使用 egg-cors 插件  需要做以下几项工作
@@ -52,15 +68,20 @@ module.exports = appInfo => {
    *      config.cors 中添加 credentials: true 还要设置origin 为前端服务ip不能设置为'*' ，后期考虑这里换成一个函数，用来动态设置origin
    *
    */
-  config.security = {
+  exports.security = {
+    csp: {
+      ignore: '/api/login/',
+    },
     csrf: {
       headerName: 'x-csrf-token', // 通过 header 传递 CSRF token 的默认字段为 x-csrf-token
     },
-    // domainWhiteList: ['http://localhost:3000', 'http://localhost:4000']
+    domainWhiteList: [ 'http://localhost:3000', 'http://localhost:4000', 'http://localhost:5000' ], // 设置白名单
   };
-  config.cors = {
-    // origin: ['http://localhost:3000', 'http://localhost:4000'],
-    origin: 'http://localhost:3000',//必须要 这里可以是一个function
+  exports.cors = {
+    /**
+     * origin 这里可以是一个function 如果这里设置了，则会忽略  exports.security.domainWhiteList
+     */
+    // origin: 'http://localhost:3000',
     /**
     * 客户端请求如果需要保存本地凭条（cookie），则会带有特别的请求字段 withCredentials
 
@@ -71,9 +92,8 @@ module.exports = appInfo => {
     * 这里应该是全局设置，单独在响应头里加这个字段好像不行。应该是这个框架问题
 
     */
-    credentials: true,// 必须要
-    // allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
-    domainWhiteList: ['http://localhost:3000', 'http://localhost:4000']
+    credentials: true, // 必须要
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   };
 
   return config;

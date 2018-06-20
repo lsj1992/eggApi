@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,15 @@
   <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
   <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 </head>
+
 <body>
-  <button id="getOne">获取用户数据</button>
-  <button id="getTwo">获取跨域接口</button>
+  <form method="post" id="loginForm">
+    <label for="name"><input type="text" name="name" placeholder="请输入用户"></label>
+    <label for="pwd"><input type="password" name="pwd" placeholder="请输入密码"></label>
+    <button type="button" id="sub">登录</button>
+  </form>
+  <button id="testPost">测试post请求testPost</button>
+  <button id="testDel">测试del请求testDel</button>
   <script>
     var csrftoken = $.cookie('csrfToken');
 
@@ -19,15 +26,19 @@
       return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
     $.ajaxSetup({
-      beforeSend: function(xhr, settings) {
+      beforeSend: function (xhr, settings) {
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
           xhr.setRequestHeader('x-csrf-token', csrftoken);
         }
       },
     });
-    $('#getOne').on('click', function () {
+    $('#sub').on('click', function () {
+      $('#loginForm').attr('action', 'http://localhost:7001/api/login/login?_csrf=' + csrftoken)
+      $('#loginForm').submit()
+    })
+    $('#testPost').on('click', function () {
       $.ajax({
-        url: 'http://localhost:7001/api/testPost/test',
+        url: 'http://localhost:7001/api/testPost/testPost',
         type: 'POST',
         data: {
           name: 'lsj',
@@ -35,16 +46,37 @@
           age: 0,
           pwd: '123456'
         },
-        xhrFields: {withCredentials: true},
+        xhrFields: { withCredentials: true },
         crossDomain: false,
         success(res) {
           console.log(res)
         },
-        error (err) {
+        error(err) {
+          console.log(err)
+        }
+      })
+    })
+    $('#testDel').on('click', function () {
+      $.ajax({
+        url: 'http://localhost:7001/api/testPost/testDel',
+        type: 'DELLETE',
+        data: {
+          name: 'lsj',
+          sex: '男',
+          age: 0,
+          pwd: '123456'
+        },
+        xhrFields: { withCredentials: true },
+        crossDomain: false,
+        success(res) {
+          console.log(res)
+        },
+        error(err) {
           console.log(err)
         }
       })
     })
   </script>
 </body>
+
 </html>
