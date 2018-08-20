@@ -6,24 +6,28 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1528508714179_2509';
 
-  // add your config here
-  config.middleware = [];
+  // add your config here 加载 errorHandler 中间件
+  // config.middleware = [ 'errorHandler' ];
   // config.middleware = [ 'checklogin' ];
-  config.checklogin = {
-    ignore(ctx) {
-      const ignoreUrl = [
-        '/login/login',
-        // '/login/loginAction',
-        // '/login/logout',
-        // '/user/add',
-        // '/user/addAction',
-      ];
-      const URL = ctx.request.url;
-      return ignoreUrl.some(item => {
-        return URL === item;
-      });
-    },
-  };
+  // 只对 /api 前缀的 url 路径生效
+  // errorHandler: {
+  //   match: '/api',
+  // };
+  // config.checklogin = {
+  //   ignore(ctx) {
+  //     const ignoreUrl = [
+  //       // '/login/login',
+  //       // '/login/loginAction',
+  //       // '/login/logout',
+  //       // '/user/add',
+  //       // '/user/addAction',
+  //     ];
+  //     const URL = ctx.request.url;
+  //     return ignoreUrl.some(item => {
+  //       return URL === item;
+  //     });
+  //   },
+  // };
 
   /**
    *
@@ -54,6 +58,12 @@ module.exports = appInfo => {
       db: 0,
     },
   };
+  /**
+   * 设置jwt密钥
+   */
+  exports.jwt = {
+    secret: 'EGGJSJWTDEMOTEST',
+  };
 
   /**
    *  跨域配置 使用 egg-cors 插件  需要做以下几项工作
@@ -70,12 +80,18 @@ module.exports = appInfo => {
    */
   exports.security = {
     csp: {
+      enable: true,
       ignore: '/api/login/',
+      xframe: {
+        enable: false,
+      },
     },
     csrf: {
+      enable: false, // 关闭csrf防范 前后端分离的项目可以关闭
       headerName: 'x-csrf-token', // 通过 header 传递 CSRF token 的默认字段为 x-csrf-token
+      ignoreJSON: false, // 不推荐设置为true，因为可能受到攻击，攻击者可以通过flash加image进行攻击
     },
-    domainWhiteList: [ 'http://localhost:3000', 'http://localhost:4000', 'http://localhost:5000' ], // 设置白名单
+    domainWhiteList: [ 'http://127.0.0.1:9527', 'http://localhost:9527', 'http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:4000', 'http://localhost:5000' ], // 设置白名单
   };
   exports.cors = {
     /**
@@ -92,7 +108,7 @@ module.exports = appInfo => {
     * 这里应该是全局设置，单独在响应头里加这个字段好像不行。应该是这个框架问题
 
     */
-    credentials: true, // 必须要
+    credentials: true, // 必须要 和前端配合可以实现再每个请求上自动带上 cookie
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   };
 

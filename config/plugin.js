@@ -16,6 +16,13 @@ exports.mysql = {
  *  启用redis
  */
 exports.redis = {
-  enable: true,
+  enable: false,
   package: 'egg-redis',
+};
+/**
+ *  启用 egg-jwt用来做权限认证
+ */
+exports.jwt = {
+  enable: true,
+  package: 'egg-jwt',
 };

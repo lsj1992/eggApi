@@ -22,4 +22,10 @@ module.exports = app => {
   router.del('/api/testPost/testDel', controller.api.testPost.test.testDel);
   // 登录
   router.post('/api/login/login', controller.api.login.login.login);
+  // 图片验证码
+  router.get('/api/login/captcha', controller.api.login.login.captcha);
+  // 获取当前用户信息
+  router.get('/api/user/info', app.jwt, controller.api.user.index.userInfo);
+  // logApi 下的 weblogs
+  router.post('/logApi/index/webLogs', controller.logApi.index.webLogs);
 };

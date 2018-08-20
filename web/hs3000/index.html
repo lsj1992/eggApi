@@ -29,6 +29,7 @@
       beforeSend: function (xhr, settings) {
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
           xhr.setRequestHeader('x-csrf-token', csrftoken);
+          console.log(xhr.setRequestHeader)
         }
       },
     });
