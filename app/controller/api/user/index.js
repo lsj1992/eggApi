@@ -4,8 +4,6 @@
 const Controller = require('egg').Controller;
 
 const Qs = require('qs');
-const svgCaptcha = require('svg-captcha');
-
 class UserController extends Controller {
   /**
    *  login

@@ -25,6 +25,11 @@ class LoginController extends Controller {
       },
       columns: [ 'id', 'name' ],
     });
+    // 可以通过 results.affectedRows 判断操作是否成功
+    console.log('======================');
+    console.log(results);
+    console.log('======================');
+
     if (results.length > 0) {
       const res = Qs.stringify(results[0]);
       const resJson = Qs.parse(res);
