@@ -26,6 +26,8 @@ module.exports = app => {
   router.get('/api/login/captcha', controller.api.login.login.captcha);
   // 获取当前用户信息
   router.get('/api/user/info', app.jwt, controller.api.user.index.userInfo);
+  // 上传文件
+  router.post('/api/upload/uploadFiles', controller.api.upload.index.uploadFiles);
   // logApi 下的 weblogs
   router.post('/logApi/index/webLogs', controller.logApi.index.webLogs);
 };

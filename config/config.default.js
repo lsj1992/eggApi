@@ -1,5 +1,15 @@
 'use strict';
+const path = require('path');
 
+function getTime() {
+  const nowDate = new Date();
+  const y = nowDate.getFullYear();
+  let m = nowDate.getMonth();
+  m = m >= 9 ? m + 1 : '0' + m;
+  let d = nowDate.getDate();
+  d = d >= 10 ? d : '0' + d;
+  return y + '年' + m + '月' + d + '日';
+}
 module.exports = appInfo => {
   const config = exports = {};
 
@@ -63,6 +73,57 @@ module.exports = appInfo => {
    */
   exports.jwt = {
     secret: 'EGGJSJWTDEMOTEST',
+  };
+  /**
+   * egg-static 静态服务
+   */
+  exports.static = {
+    // maxAge: 31536000,
+  };
+
+  /**
+   * 日志目录
+   */
+  exports.logger = {
+    appLogName: `${appInfo.name}-web-${getTime()}.log`,
+    coreLogName: `${appInfo.name}-egg-web-${getTime()}.log`,
+    agentLogName: `${appInfo.name}-egg-agent-${getTime()}.log`,
+    errorLogName: `${appInfo.name}-common-error-${getTime()}.log`,
+    dir: path.join(__dirname, '../logs/testlogdir/'),
+  };
+  /**
+   * 设置 egg-multipart 上传文件大小限制
+   */
+  exports.multipart = {
+    fileSize: '50mb',
+    fileExtensions: [
+      '.foo',
+      '.apk',
+    ],
+    whitelist: [
+      '.jpg', '.jpeg', // image/jpeg
+      '.png', // image/png, image/x-png
+      '.gif', // image/gif
+      '.bmp', // image/bmp
+      '.wbmp', // image/vnd.wap.wbmp
+      '.webp',
+      '.tif',
+      '.psd',
+      // text
+      '.svg',
+      '.js', '.jsx',
+      '.json',
+      '.css', '.less',
+      '.html', '.htm',
+      '.xml',
+      // tar
+      '.zip',
+      '.gz', '.tgz', '.gzip',
+      // video
+      '.mp3',
+      '.mp4',
+      '.avi',
+    ],
   };
 
   /**
