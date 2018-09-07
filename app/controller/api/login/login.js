@@ -5,6 +5,8 @@ const Controller = require('egg').Controller;
 
 const Qs = require('qs');
 const svgCaptcha = require('svg-captcha');
+// const RestCode = require('../../../helper/resultRestCode');
+// const { RestCode, codeStatus } = require('../../../helper/resultRestCode');
 
 class LoginController extends Controller {
   /**
@@ -13,22 +15,19 @@ class LoginController extends Controller {
   async login() {
     const app = this.app;
     const ctx = this.ctx;
+    const RestCode = ctx.helper.resultCode.RestCode;
+    const codeStatus = ctx.helper.resultCode.codeStatus;
+    console.log('=========================================');
+    console.log(codeStatus);
     const params = Object.assign(
       ctx.query,
       ctx.request.body,
       ctx.params
     );
-    const results = await app.mysql.select('users', {
-      where: {
-        name: params.name,
-        password: params.password,
-      },
-      columns: [ 'id', 'name' ],
-    });
+    // ctx.service.posts
+    // 调用server中的方法登录
+    const results = await ctx.service.user.Login(params);
     // 可以通过 results.affectedRows 判断操作是否成功
-    console.log('======================');
-    console.log(results);
-    console.log('======================');
 
     if (results.length > 0) {
       const res = Qs.stringify(results[0]);
@@ -36,46 +35,30 @@ class LoginController extends Controller {
       const token = app.jwt.sign(resJson, app.config.jwt.secret);
       console.log(token);
       resJson.token = token;
-      // await app.redis.set(
-      //   `${results[0].id}_token`,
-      //   Qs.stringify(results[0]),
-      //   5
-      // );
-      // const str = await app.redis.get(`${results[0].id}_token`);
-      // console.log(str);
-      // ctx.body = await Qs.parse(str);
-      // ctx.body = token;
+      // 存储到session中
+      ctx.session.user = JSON.stringify(resJson);
+      console.log('=========================================');
+      // ctx.body = RestCode.set(resJson, codeStatus.success[0], '登录成功');
       ctx.body = {
-        message: '登录成功！',
-        data: resJson,
-        code: 100001,
+        e: '000000',
+        d: resJson,
+        m: '登录成功',
       };
     } else {
-      ctx.body = '用户名或者密码错误';
+      ctx.body = RestCode.error(codeStatus.noFondData[0], codeStatus.noFondData[1]);
       ctx.redirect('/');
     }
   }
 
-  async islogin() {
-    const app = this.app;
-    const ctx = this.ctx;
+  async islogin(app, ctx, next) {
     const params = Object.assign(
-      this.ctx.query,
-      this.ctx.request.body,
-      this.ctx.params
+      ctx.query,
+      ctx.request.body,
+      ctx.params
     );
-    const isLogin = await app.redis.get(`${params.id}_token`);
+    const isLogin = await app.service.user.userIsLogin(params);
     if (isLogin) {
-      const results = await app.mysql.select('user', {
-        where: {
-          id: params.id,
-        },
-      });
-      if (results.length > 0) {
-        ctx.body = await Qs.parse(results);
-      } else {
-        ctx.redirect('/');
-      }
+      next();
     } else {
       ctx.redirect('/');
     }

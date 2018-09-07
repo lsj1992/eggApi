@@ -46,12 +46,19 @@ module.exports = appInfo => {
    */
   exports.mysql = {
     client: {
-      host: 'localhost',
+      host: '192.168.3.131',
       port: '3306',
-      user: 'root',
+      user: 'gzb',
       password: '123456',
-      database: 'lsj_db',
+      database: 'gzb',
     },
+    // client: {
+    //   host: 'localhost',
+    //   port: '3306',
+    //   user: 'root',
+    //   password: '123456',
+    //   database: 'lsj_db',
+    // },
     // load into app, default is open
     app: true,
     // load into agent, default is close
@@ -92,37 +99,52 @@ module.exports = appInfo => {
     dir: path.join(__dirname, '../logs/testlogdir/'),
   };
   /**
+   * session 默认配置如下
+   */
+  exports.session = {
+    key: 'LSJ_SESSION_KEY',
+    maxAge: 24 * 3600 * 1000, // 1 天
+    httpOnly: true,
+    encrypt: true,
+  };
+  /**
+   * egg-helper 配置
+   */
+  exports.helper = {
+
+  };
+  /**
    * 设置 egg-multipart 上传文件大小限制
    */
   exports.multipart = {
-    fileSize: '50mb',
-    fileExtensions: [
-      '.foo',
-      '.apk',
-    ],
-    whitelist: [
+    fileSize: '1mb', // 默认是10mb
+    // fileExtensions: [
+    //   '.foo',
+    //   '.apk',
+    // ],
+    whitelist: [ // 如果重写whitelist 则fileExtensions将失效
       '.jpg', '.jpeg', // image/jpeg
       '.png', // image/png, image/x-png
-      '.gif', // image/gif
-      '.bmp', // image/bmp
-      '.wbmp', // image/vnd.wap.wbmp
-      '.webp',
-      '.tif',
-      '.psd',
-      // text
-      '.svg',
-      '.js', '.jsx',
-      '.json',
-      '.css', '.less',
-      '.html', '.htm',
-      '.xml',
-      // tar
-      '.zip',
-      '.gz', '.tgz', '.gzip',
-      // video
-      '.mp3',
-      '.mp4',
-      '.avi',
+      // '.gif', // image/gif
+      // '.bmp', // image/bmp
+      // '.wbmp', // image/vnd.wap.wbmp
+      // '.webp',
+      // '.tif',
+      // '.psd',
+      // // text
+      // '.svg',
+      // '.js', '.jsx',
+      // '.json',
+      // '.css', '.less',
+      // '.html', '.htm',
+      // '.xml',
+      // // tar
+      // '.zip',
+      // '.gz', '.tgz', '.gzip',
+      // // video
+      // '.mp3',
+      // '.mp4',
+      // '.avi',
     ],
   };
 

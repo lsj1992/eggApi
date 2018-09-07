@@ -26,3 +26,10 @@ exports.jwt = {
   enable: true,
   package: 'egg-jwt',
 };
+/**
+ * 启用egg-helper
+ */
+exports.helper = {
+  enable: true,
+  package: 'egg-helper',
+};

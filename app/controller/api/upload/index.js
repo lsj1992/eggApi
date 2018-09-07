@@ -57,6 +57,75 @@ class FileController extends Controller {
       data: { urls },
     };
   }
+  /**
+   * 使用mutation进行处理
+   */
+  async uploads() {
+    const ctx = this.ctx;
+    const parts = ctx.multipart({ autoFields: true });
+    let part;
+    const files = [];
+    let fields;
+    while ((part = await parts()) != null) {
+      if (part.length) {
+        // arrays are busboy fields
+        console.log('field: ' + part[0]);
+        console.log('value: ' + part[1]);
+        console.log('valueTruncated: ' + part[2]);
+        console.log('fieldnameTruncated: ' + part[3]);
+
+        ctx.body = {
+          msg: '上传成功',
+          data: {
+            field: part[0],
+            value: part[1],
+            valueTruncated: part[2],
+            fieldnameTruncated: part[3],
+          },
+        };
+      } else {
+        if (!part.filename) {
+          // user click `upload` before choose a file,
+          // `part` will be file stream, but `part.filename` is empty
+          // must handler this, such as log error.
+          ctx.body = {
+            msg: '没有part.fileName',
+            data: { },
+          };
+          return;
+        }
+
+        // otherwise, it's a stream
+        console.log('field: ' + part.fieldname);
+        console.log('filename: ' + part.filename);
+        console.log('encoding: ' + part.encoding);
+        console.log('mime: ' + part.mime);
+        // let result;
+        try {
+          files.push(part);
+          await sendToWormhole(part);
+          fields = parts.field;
+          // await awaitWriteStream(stream.pipe(writeStream));
+          // await awaitWriteStream(part);
+          // result = await ctx.oss.put('egg-multipart-test/' + part.filename, part);
+        } catch (err) {
+          // await sendToWormhole(part);
+          throw err;
+        }
+        // return [ files, fields ];
+        // console.log(result);
+        ctx.body = {
+          msg: '上传成功',
+          data: [ files, fields, 'yes success' ],
+        };
+      }
+    }
+    console.log('and we are done parsing the form!');
+    ctx.body = {
+      msg: '上传成功',
+      data: [ 'my god not really success', part ],
+    };
+  }
 }
 
 module.exports = FileController;

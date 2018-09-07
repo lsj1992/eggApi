@@ -26,8 +26,12 @@ module.exports = app => {
   router.get('/api/login/captcha', controller.api.login.login.captcha);
   // 获取当前用户信息
   router.get('/api/user/info', app.jwt, controller.api.user.index.userInfo);
-  // 上传文件
+  // 上传文件 使用 formidable
   router.post('/api/upload/uploadFiles', controller.api.upload.index.uploadFiles);
+  // 上传文件 使用 egg-multipart
+  router.post('/api/upload/uploads', controller.api.upload.index.uploads);
   // logApi 下的 weblogs
   router.post('/logApi/index/webLogs', controller.logApi.index.webLogs);
+  // 测试工之保登录
+  router.post('/crm/user/login', controller.api.login.login.login);
 };
